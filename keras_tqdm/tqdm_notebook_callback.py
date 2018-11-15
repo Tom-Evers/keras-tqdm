@@ -16,15 +16,15 @@ class TQDMNotebookCallback(TQDMCallback):
                  leave_outer=True,
                  output_file=sys.stderr,
                  initial=0, **kwargs):
-        super(TQDMNotebookCallback, self).__init__(outer_description=outer_description,
-                                                   inner_description_initial=inner_description_initial,
-                                                   inner_description_update=inner_description_update,
-                                                   metric_format=metric_format,
-                                                   separator=separator,
-                                                   leave_inner=leave_inner,
-                                                   leave_outer=leave_outer,
-                                                   output_file=output_file,
-                                                   initial=initial, **kwargs)
+        super().__init__(outer_description=outer_description,
+                         inner_description_initial=inner_description_initial,
+                         inner_description_update=inner_description_update,
+                         metric_format=metric_format,
+                         separator=separator,
+                         leave_inner=leave_inner,
+                         leave_outer=leave_outer,
+                         output_file=output_file,
+                         initial=initial, **kwargs)
 
     def tqdm(self, desc, total, leave, initial=0):
         """

@@ -33,6 +33,7 @@ class TQDMCallback(Callback):
         :param output_file: output file (default sys.stderr)
         :param initial: Initial counter state
         """
+        super().__init__()
         self.outer_description = outer_description
         self.inner_description_initial = inner_description_initial
         self.inner_description_update = inner_description_update
@@ -79,7 +80,9 @@ class TQDMCallback(Callback):
         """
         return self.tqdm(desc=desc, total=total, leave=self.leave_inner)
 
-    def on_epoch_begin(self, epoch, logs={}):
+    def on_epoch_begin(self, epoch, logs=None):
+        if logs is None:
+            logs = {}
         self.epoch = epoch
         desc = self.inner_description_initial.format(epoch=self.epoch)
         self.mode = 0  # samples
@@ -95,7 +98,9 @@ class TQDMCallback(Callback):
         self.inner_count = 0
         self.running_logs = {}
 
-    def on_epoch_end(self, epoch, logs={}):
+    def on_epoch_end(self, epoch, logs=None):
+        if logs is None:
+            logs = {}
         metrics = self.format_metrics(logs)
         desc = self.inner_description_update.format(epoch=epoch, metrics=metrics)
         if self.show_inner:
@@ -108,10 +113,13 @@ class TQDMCallback(Callback):
         if self.show_outer:
             self.tqdm_outer.update(1)
 
-    def on_batch_begin(self, batch, logs={}):
-        pass
+    def on_batch_begin(self, batch, logs=None):
+        if logs is None:
+            logs = {}
 
-    def on_batch_end(self, batch, logs={}):
+    def on_batch_end(self, batch, logs=None):
+        if logs is None:
+            logs = {}
         if self.mode == 0:
             update = logs['size']
         else:
@@ -125,14 +133,18 @@ class TQDMCallback(Callback):
                 self.tqdm_inner.desc = desc
                 self.tqdm_inner.update(update)
 
-    def on_train_begin(self, logs={}):
+    def on_train_begin(self, logs=None):
+        if logs is None:
+            logs = {}
         if self.show_outer:
             epochs = (self.params['epochs'] if 'epochs' in self.params
                       else self.params['nb_epoch'])
             self.tqdm_outer = self.build_tqdm_outer(desc=self.outer_description,
                                                     total=epochs)
 
-    def on_train_end(self, logs={}):
+    def on_train_end(self, logs=None):
+        if logs is None:
+            logs = {}
         if self.show_outer:
             self.tqdm_outer.close()
 
